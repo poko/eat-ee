@@ -1,0 +1,65 @@
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+/.idea/*
+.DS_Store
+/build
+
+#Android generated
+bin/
+gen/
+
+#Eclipse
+.project
+.classpath
+.settings
+.checkstyle
+
+#IntelliJ IDEA
+.idea/*
+*.iws
+*.iml
+app/*.iml
+!.idea/codeStyleSettings.xml
+
+#Maven
+target
+release.properties
+pom.xml.*
+
+website/_site
+
+# application files
+*.apk
+*.ap_
+
+# files for the dex VM
+*.dex
+
+# Java class files
+*.class
+
+# Misc
+.metadata
+*~
+*.DS_Store
+*.tmp
+*.bak
+*.swp
+Thumbs.db
+Desktop.ini
+
+# Crashlytics
+com_crashlytics_export_strings.xml
+.crashlytics_data/
+app/src/main/assets/crashlytics-build.properties
+
+# Gradle
+.gradle/
+local.properties
+/*/local.properties
+/build/
+/app-facebooksdk/facebook/build/
+/buildSrc/build/
+/app-viewpagerindicator/library/build/
