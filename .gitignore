@@ -63,3 +63,4 @@ local.properties
 /app-facebooksdk/facebook/build/
 /buildSrc/build/
 /app-viewpagerindicator/library/build/
+/*/.idea
