@@ -1,21 +1,39 @@
 package net.ecoarttech.edibleecologies;
 
-import android.support.v4.app.FragmentActivity;
+import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class EcologiesMapActivity extends FragmentActivity {
+public class EcologiesMapActivity extends FragmentActivity implements GoogleMap.OnMapLoadedCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
+    private GoogleApiClient mGoogleApiClient;
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
+    private double mUserLat = 30; //TODO - set defaults if user doesn't have location enabled or something
+    private double mUserLng = -97;
+    private Location mLastLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ecologies_map);
+        // TODO - check if google play services isn't available
+        buildGoogleApiClient();
+        // TODO - check if location isn't enabled.
+
+        // get user's location
+
+        // setup action bar
+
+        // setup map
         setUpMapIfNeeded();
     }
 
@@ -23,6 +41,15 @@ public class EcologiesMapActivity extends FragmentActivity {
     protected void onResume() {
         super.onResume();
         setUpMapIfNeeded();
+        mGoogleApiClient.connect();
+    }
+
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
     }
 
     /**
@@ -48,7 +75,7 @@ public class EcologiesMapActivity extends FragmentActivity {
                     .getMap();
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
-                setUpMap();
+                mMap.setOnMapLoadedCallback(this);
             }
         }
     }
@@ -60,6 +87,34 @@ public class EcologiesMapActivity extends FragmentActivity {
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+        LatLng position = new LatLng(mUserLat, mUserLng);
+        mMap.addMarker(new MarkerOptions().position(position));
+        // zoom user to map
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position, 14));
+    }
+
+    @Override
+    public void onMapLoaded() {
+        setUpMap();
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                mGoogleApiClient);
+        if (mLastLocation != null) {
+            mUserLat = mLastLocation.getLatitude();
+            mUserLng = mLastLocation.getLongitude();
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        //TODO - display error
     }
 }
