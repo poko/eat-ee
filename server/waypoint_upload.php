@@ -41,12 +41,6 @@ $lng = $_POST["lng"];
 $interview = $_POST["interview"];
 $geo = $_POST["geocoded_area"];
 
-// create target folder
-$today_dir = date("Y-m-d");
-$today_upload_dir = $base_upload_dir . $today_dir;
-
-is_dir($today_upload_dir) || mkdir($today_upload_dir, 0755);
-
 include 'db_open.php';
 
 // insert waypoint data
@@ -64,21 +58,27 @@ if (!$result) {
 
 $waypoint_id = mysqli_insert_id($conn);
 
+
+// create target folder
+$upload_dir = $base_upload_dir . $waypoint_id;
+
+is_dir($upload_dir) || mkdir($upload_dir, 0755);
+
 // save the photos
-$success = "true";
+$success = true;
 foreach ($_FILES as $file){
 	// create target folder/filename and move it there
-	$uploadfile = $today_upload_dir . "/".$waypoint_id."_".basename($file['name']);
+	$uploadfile = $upload_dir . "/".$waypoint_id."_".basename($file['name']);
 	if (move_uploaded_file($file['tmp_name'], $uploadfile)) {
 	    //echo "File is valid, and was successfully uploaded.\n";
 	} else {
-		$success = "false";
+		$success = false;
 	    error_log("Couldn't upload file.  Maybe it's too big?");
 	}
 }
 
 include 'db_close.php';
 
-$resp = ["success"=>true, "waypoint_id"=>$waypoint_id];
+$resp = ["success"=>$success, "waypoint_id"=>$waypoint_id];
 echo json_encode($resp);
 ?>
