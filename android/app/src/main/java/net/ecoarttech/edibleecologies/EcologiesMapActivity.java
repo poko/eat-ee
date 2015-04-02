@@ -13,6 +13,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import net.ecoarttech.edibleecologies.network.NetworkManager;
+
 public class EcologiesMapActivity extends FragmentActivity implements GoogleMap.OnMapLoadedCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleApiClient mGoogleApiClient;
@@ -25,6 +27,8 @@ public class EcologiesMapActivity extends FragmentActivity implements GoogleMap.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ecologies_map);
+        // initialize networking
+        NetworkManager.initialize(getApplicationContext());
         // TODO - check if google play services isn't available
         buildGoogleApiClient();
         // TODO - check if location isn't enabled.
