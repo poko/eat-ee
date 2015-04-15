@@ -15,5 +15,5 @@ $COL_QUESTION_ID = "_id";
 $COL_QUESTION_TEXT = "text";
 $COL_QUESTION_ACTIVE = "active";
 
-$conn = mysqli_connect("localhost", "ee_db_user", "eat_ee2015", "edible_ecologies") or die('Cannot connect to the database because: ' . mysqli_error());
+$conn = mysqli_connect("localhost", "ecoar4_edibleeco", "ee2015***", "ecoar4_edible_eco") or die('Cannot connect to the database because: ' . mysqli_error());
 ?>

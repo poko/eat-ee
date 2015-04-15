@@ -3,7 +3,11 @@ package net.ecoarttech.edibleecologies;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.View;
+import android.widget.LinearLayout;
 
+import com.android.volley.VolleyError;
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -13,15 +17,32 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import net.ecoarttech.edibleecologies.network.APIClient;
+import net.ecoarttech.edibleecologies.network.NetworkListener;
 import net.ecoarttech.edibleecologies.network.NetworkManager;
+import net.ecoarttech.edibleecologies.util.InterviewPanelHelper;
+import net.ecoarttech.edibleecologies.util.SharedPrefs;
 
-public class EcologiesMapActivity extends FragmentActivity implements GoogleMap.OnMapLoadedCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
+public class EcologiesMapActivity extends FragmentActivity implements GoogleMap.OnMapLoadedCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
     private GoogleApiClient mGoogleApiClient;
+    // views
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
+    private FloatingActionButton mPinButton;
+
+    //data
     private double mUserLat = 30; //TODO - set defaults if user doesn't have location enabled or something
     private double mUserLng = -97;
     private Location mLastLocation;
+
+    // misc
+    private InterviewPanelHelper mPanelHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,12 +54,20 @@ public class EcologiesMapActivity extends FragmentActivity implements GoogleMap.
         buildGoogleApiClient();
         // TODO - check if location isn't enabled.
 
+        // download current interview questions
+        APIClient.getQuestions(new InterviewQuestionsListener());
+
         // get user's location
 
         // setup action bar
 
         // setup map
         setUpMapIfNeeded();
+
+        // set up other ui elements
+        mPinButton = (FloatingActionButton) findViewById(R.id.btn_pin);
+        mPinButton.setOnClickListener(this);
+        mPanelHelper = new InterviewPanelHelper(getLayoutInflater(), (LinearLayout) findViewById(R.id.interview));
     }
 
     @Override
@@ -47,6 +76,18 @@ public class EcologiesMapActivity extends FragmentActivity implements GoogleMap.
         setUpMapIfNeeded();
         mGoogleApiClient.connect();
     }
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()){
+            case R.id.btn_pin:{
+                // toggle interview panel ?
+                mPanelHelper.toggleInterviewPanel();
+                break;
+            }
+        }
+    }
+
 
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -120,5 +161,35 @@ public class EcologiesMapActivity extends FragmentActivity implements GoogleMap.
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         //TODO - display error
+    }
+
+    private void loadLocalQuestions(){
+        mPanelHelper.setQuestions(SharedPrefs.getQuestions());
+    }
+
+    private class InterviewQuestionsListener implements NetworkListener<JSONArray> {
+        @Override
+        public void onErrorResponse(VolleyError volleyError) {
+            //default to questions currently saved locally
+            loadLocalQuestions();
+        }
+
+        @Override
+        public void onResponse(JSONArray jsonArray) {
+            try {
+                ArrayList<String> questions = new ArrayList<>();
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject question = (JSONObject) jsonArray.get(i);
+                    questions.add(question.getString("text"));
+                }
+                // save to shared prefs
+                SharedPrefs.saveQuestions(questions);
+                loadLocalQuestions();
+            }
+            catch (JSONException ex){
+                loadLocalQuestions();
+            }
+        }
+
     }
 }
