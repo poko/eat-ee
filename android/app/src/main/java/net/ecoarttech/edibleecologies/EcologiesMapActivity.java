@@ -1,8 +1,10 @@
 package net.ecoarttech.edibleecologies;
 
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -17,6 +19,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import net.ecoarttech.edibleecologies.model.Waypoint;
 import net.ecoarttech.edibleecologies.network.APIClient;
 import net.ecoarttech.edibleecologies.network.NetworkListener;
 import net.ecoarttech.edibleecologies.network.NetworkManager;
@@ -31,6 +34,8 @@ import java.util.ArrayList;
 
 public class EcologiesMapActivity extends FragmentActivity implements GoogleMap.OnMapLoadedCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
+    private static final String TAG = "EdibleEcologiesTag";
+
     private GoogleApiClient mGoogleApiClient;
     // views
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
@@ -40,6 +45,7 @@ public class EcologiesMapActivity extends FragmentActivity implements GoogleMap.
     private double mUserLat = 30; //TODO - set defaults if user doesn't have location enabled or something
     private double mUserLng = -97;
     private Location mLastLocation;
+    private ArrayList<Waypoint> mDownloadedWaypoints;
 
     // misc
     private InterviewPanelHelper mPanelHelper;
@@ -56,6 +62,12 @@ public class EcologiesMapActivity extends FragmentActivity implements GoogleMap.
 
         // download current interview questions
         APIClient.getQuestions(new InterviewQuestionsListener());
+
+        // download nearby waypoints
+        mDownloadedWaypoints = new ArrayList<>();
+        WaypointDownloadListener waypointListener = new WaypointDownloadListener();
+        APIClient.getWaypoints(mUserLat, mUserLng, waypointListener);
+        //add these to map in onMapLoaded instead.
 
         // get user's location
 
@@ -188,6 +200,32 @@ public class EcologiesMapActivity extends FragmentActivity implements GoogleMap.
             }
             catch (JSONException ex){
                 loadLocalQuestions();
+            }
+        }
+
+    }
+
+    private class WaypointDownloadListener implements NetworkListener<JSONArray> {
+
+        private Geocoder geocoder = new Geocoder(getApplicationContext());
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError) {
+
+        }
+
+        @Override
+        public void onResponse(JSONArray jsonArray) {
+            for (int i = 0; i < jsonArray.length(); i++) {
+                try {
+                    Waypoint point = new Waypoint(jsonArray.getJSONObject(i), geocoder);
+                    mDownloadedWaypoints.add(i, point);
+                    mMap.addMarker(new MarkerOptions().position(point.getLocation())
+                                                        .title(point.getCity())
+                                                        .snippet(point.getDetails()));
+                } catch (JSONException e) {
+                    Log.e(TAG, e.getLocalizedMessage());
+                }
             }
         }
 
