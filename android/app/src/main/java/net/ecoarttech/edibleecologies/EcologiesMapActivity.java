@@ -1,10 +1,14 @@
 package net.ecoarttech.edibleecologies;
 
+import android.content.Context;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -14,7 +18,9 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import net.ecoarttech.edibleecologies.network.APIClient;
@@ -43,6 +49,7 @@ public class EcologiesMapActivity extends FragmentActivity implements GoogleMap.
 
     // misc
     private InterviewPanelHelper mPanelHelper;
+    private Marker mUserPositionMarker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,12 +59,42 @@ public class EcologiesMapActivity extends FragmentActivity implements GoogleMap.
         NetworkManager.initialize(getApplicationContext());
         // TODO - check if google play services isn't available
         buildGoogleApiClient();
-        // TODO - check if location isn't enabled.
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            //ask user to enable location?
+            Toast.makeText(this, "Location services are disabled.", Toast.LENGTH_SHORT).show();
+        } else {
+            LocationListener locationListener = new LocationListener() {
+                @Override
+                public void onLocationChanged(Location location) {
+                    mUserLat = location.getLatitude();
+                    mUserLng = location.getLongitude();
+                    LatLng position = new LatLng(mUserLat, mUserLng);
+                    mUserPositionMarker.setPosition(position);
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position, 14));
+                }
+
+                @Override
+                public void onStatusChanged(String s, int i, Bundle bundle) {
+
+                }
+
+                @Override
+                public void onProviderEnabled(String s) {
+
+                }
+
+                @Override
+                public void onProviderDisabled(String s) {
+
+                }
+            };
+            locationManager.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
+        }
 
         // download current interview questions
         APIClient.getQuestions(new InterviewQuestionsListener());
-
-        // get user's location
 
         // setup action bar
 
@@ -133,7 +170,8 @@ public class EcologiesMapActivity extends FragmentActivity implements GoogleMap.
      */
     private void setUpMap() {
         LatLng position = new LatLng(mUserLat, mUserLng);
-        mMap.addMarker(new MarkerOptions().position(position));
+        mUserPositionMarker = mMap.addMarker(new MarkerOptions().position(position));
+        mUserPositionMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
         // zoom user to map
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position, 14));
     }
