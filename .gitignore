@@ -5,6 +5,7 @@
 /.idea/*
 .DS_Store
 /build
+android/build
 
 #Android generated
 bin/
