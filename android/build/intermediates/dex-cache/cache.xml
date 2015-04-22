@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/mollyrand/android-sdks/extras/android/m2repository/com/android/support/support-annotations/22.0.0/support-annotations-22.0.0.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="685d0b2c590447e85284ed84712cb363ba04eff8">
+        <dex dex="/Users/mollyrand/xCodeProjects/eat-ee/android/app/build/intermediates/pre-dexed/debug/support-annotations-22.0.0-43aec4bdc9e6ece68c3fb16ab93eaf9599b1f2b2.jar" />
+    </item>
+    <item
+        jar="/Users/mollyrand/xCodeProjects/eat-ee/android/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.5.87/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="dd9247ea0fabe8ee479638c4b4a23e93752be256">
+        <dex dex="/Users/mollyrand/xCodeProjects/eat-ee/android/app/build/intermediates/pre-dexed/debug/classes-42fef1f93142cfcc8732e7aa96b327f17ec1ca77.jar" />
+    </item>
+    <item
+        jar="/Users/mollyrand/xCodeProjects/eat-ee/android/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.5.87/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="dd9247ea0fabe8ee479638c4b4a23e93752be256">
+        <dex dex="/Users/mollyrand/xCodeProjects/eat-ee/android/app/build/intermediates/pre-dexed/debug/classes-42fef1f93142cfcc8732e7aa96b327f17ec1ca77.jar" />
+    </item>
+    <item
+        jar="/Users/mollyrand/xCodeProjects/eat-ee/android/app/libs/volley.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="cac8741b0941572370359418f0f3c2b8cf0c3dde">
+        <dex dex="/Users/mollyrand/xCodeProjects/eat-ee/android/app/build/intermediates/pre-dexed/debug/volley-92c1a8b58f5f2cf35fe1a75282b76f9b1e5c77fa.jar" />
+    </item>
+    <item
+        jar="/Users/mollyrand/xCodeProjects/eat-ee/android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.0.0/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="d84409890828e07d344a3b9b1da545dba9897b51">
+        <dex dex="/Users/mollyrand/xCodeProjects/eat-ee/android/app/build/intermediates/pre-dexed/debug/classes-fc962518f1b9a4e4f0dcc462a389ca9c5bbfc40f.jar" />
+    </item>
+    <item
+        jar="/Users/mollyrand/xCodeProjects/eat-ee/android/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.0.0/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="4e86306289ace4aa0cfec44a05ed2b410d36989d">
+        <dex dex="/Users/mollyrand/xCodeProjects/eat-ee/android/app/build/intermediates/pre-dexed/debug/classes-46c797cc4a750bacaf8f3d1d3c08d8a7ea9d5e4c.jar" />
+    </item>
+    <item
+        jar="/Users/mollyrand/xCodeProjects/eat-ee/android/app/build/intermediates/exploded-aar/com.getbase/floatingactionbutton/1.9.0/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="f2b8a750df2a5d485d0c40b379b44371c5e6d98d">
+        <dex dex="/Users/mollyrand/xCodeProjects/eat-ee/android/app/build/intermediates/pre-dexed/debug/classes-3c1e98490b45d2858e7141bb2795d7ba9daf5b78.jar" />
+    </item>
+    <item
+        jar="/Users/mollyrand/xCodeProjects/eat-ee/android/app/libs/volley.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="cac8741b0941572370359418f0f3c2b8cf0c3dde">
+        <dex dex="/Users/mollyrand/xCodeProjects/eat-ee/android/app/build/intermediates/pre-dexed/debug/volley-92c1a8b58f5f2cf35fe1a75282b76f9b1e5c77fa.jar" />
+    </item>
+    <item
+        jar="/Users/mollyrand/xCodeProjects/eat-ee/android/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.0.0/libs/internal_impl-22.0.0.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="b5b92f469d515a13d778900f6d50c03d12f35504">
+        <dex dex="/Users/mollyrand/xCodeProjects/eat-ee/android/app/build/intermediates/pre-dexed/debug/internal_impl-22.0.0-8383e46ab4b8b76728aa3a7c712f914bde76ae3e.jar" />
+    </item>
+
+</items>
